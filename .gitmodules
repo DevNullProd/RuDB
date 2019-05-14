@@ -1,3 +1,3 @@
 [submodule "ext/rudb/NuDB"]
 	path = ext/rudb/NuDB
-	url = git@github.com:CPPAlliance/NuDB.git
+	url = https://github.com/CPPAlliance/NuDB.git
