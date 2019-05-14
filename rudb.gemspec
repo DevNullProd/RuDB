@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'rudb/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "rudb"
+  spec.name          = "rrudb"
   spec.version       = RuDB::VERSION
   spec.authors       = ["Dev Null Productions"]
   spec.email         = ["devnullproductions@gmail.com"]

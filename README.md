@@ -10,8 +10,10 @@ RuDB provides a native wrapper around the [NuDB](https://github.com/CPPAlliance/
 rudb may be installed with the following command:
 
 ```ruby
-$ gem install rudb
+$ gem install rrudb
 ```
+
+(Yes, there are two '**r**'s in there!)
 
 #### Usage
 
