@@ -99,6 +99,24 @@ VALUE rudb_block_size(VALUE _self, VALUE _path) {
   return INT2NUM(nudb::block_size(path));
 }
 
+// TODO parameterize progress callback
+VALUE rudb_visit(VALUE _self, VALUE path, VALUE callback){
+  Check_Type(path, T_STRING);
+  std::string _path  = std::string((char*)RSTRING_PTR(path), RSTRING_LEN(path));
+
+  nudb::error_code ec;
+  nudb::visit(_path, [&](void const* key, std::size_t key_size,
+                         void const* val, std::size_t val_size,
+                         nudb::error_code& ec1){
+          VALUE key_str = rb_str_new((char const*)key, key_size);
+          VALUE val_str = rb_str_new((char const*)val, val_size);
+
+          rb_funcall(callback, rb_intern("call"), 2, key_str, val_str);
+        }, nudb::no_progress{}, ec);
+
+  return ec2obj(new nudb::error_code(ec));
+}
+
 ///
 
 void db_free(nudb_store_pointer* store_pointer){
@@ -218,6 +236,7 @@ extern "C"{
       rb_define_singleton_method(mRuDB, "erase_file", (METHOD)rudb_erase_file, 1);
       rb_define_singleton_method(mRuDB, "make_salt",  (METHOD)rudb_make_salt,  0);
       rb_define_singleton_method(mRuDB, "block_size", (METHOD)rudb_block_size, 1);
+      rb_define_singleton_method(mRuDB, "visit",      (METHOD)rudb_visit,      2);
 
       cRuDB_store = rb_define_class_under(mRuDB, "Store", rb_cObject);
       rb_define_alloc_func(cRuDB_store, store_alloc);
