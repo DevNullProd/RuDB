@@ -23,9 +23,25 @@ VALUE ec2obj(nudb::error_code* ec){
   return Data_Wrap_Struct(cRuDB_ec, 0, ec_free, ec);
 }
 
+static VALUE ec_alloc(VALUE klass){
+  nudb::error_code* ec_pointer = ALLOC(nudb::error_code);
+  return Data_Wrap_Struct(klass, 0, ec_free, ec_pointer);
+}
+
 VALUE rudb_ec_value(VALUE _self){
   nudb::error_code* ec_pointer;
   Data_Get_Struct(_self, nudb::error_code , ec_pointer);
+  return INT2NUM(ec_pointer->value());
+}
+
+VALUE rudb_ec_value_eq(VALUE _self, VALUE _val){
+  Check_Type(_val, T_FIXNUM);
+  int _vali = NUM2INT(_val);
+
+  nudb::error_code* ec_pointer;
+  Data_Get_Struct(_self, nudb::error_code , ec_pointer);
+  ec_pointer->assign(_vali, ec_pointer->category());
+
   return INT2NUM(ec_pointer->value());
 }
 
@@ -247,7 +263,9 @@ extern "C"{
       rb_define_method(cRuDB_store, "close",      (METHOD)rudb_store_close, 0);
 
       cRuDB_ec = rb_define_class_under(mRuDB, "ErrorCode", rb_cObject);
-      rb_define_method(cRuDB_ec, "value",    (METHOD)rudb_ec_value, 0);
-      rb_define_method(cRuDB_ec, "message",  (METHOD)rudb_ec_message, 0);
+      rb_define_alloc_func(cRuDB_ec, ec_alloc);
+      rb_define_method(cRuDB_ec, "value",    (METHOD)rudb_ec_value,      0);
+      rb_define_method(cRuDB_ec, "value=",   (METHOD)rudb_ec_value_eq,   1);
+      rb_define_method(cRuDB_ec, "message",  (METHOD)rudb_ec_message,    0);
   }
 }
