@@ -1,1 +1,7 @@
 *swp
+*.gem
+Makefile
+extconf.h
+mkmf.log
+*.o
+*.so
