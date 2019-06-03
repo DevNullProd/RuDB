@@ -24,7 +24,7 @@ VALUE ec2obj(nudb::error_code* ec){
 }
 
 static VALUE ec_alloc(VALUE klass){
-  nudb::error_code* ec_pointer = ALLOC(nudb::error_code);
+  nudb::error_code* ec_pointer = new nudb::error_code;
   return Data_Wrap_Struct(klass, 0, ec_free, ec_pointer);
 }
 
