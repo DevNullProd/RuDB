@@ -174,6 +174,13 @@ VALUE rudb_store_open(VALUE _self, VALUE dat_path, VALUE key_path, VALUE log_pat
   nudb::error_code ec;
   store_pointer->store->open(dat, key, log, ec);
 
+  if(!ec){
+    // store paths as member variables
+    rb_iv_set(_self, "@dat_path", dat_path);
+    rb_iv_set(_self, "@key_path", key_path);
+    rb_iv_set(_self, "@log_path", log_path);
+  }
+
   return ec2obj(new nudb::error_code(ec));
 }
 

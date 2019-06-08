@@ -7,6 +7,12 @@ module RuDB
     })
   end
 
+  class Store
+    attr_reader :dat_path,
+                :key_path,
+                :log_path
+  end
+
   # FIXME: should also marshal error_category (somehow)
   class ErrorCode
     def marshal_dump
