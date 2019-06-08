@@ -184,6 +184,13 @@ VALUE rudb_store_open(VALUE _self, VALUE dat_path, VALUE key_path, VALUE log_pat
   return ec2obj(new nudb::error_code(ec));
 }
 
+VALUE rudb_store_is_open(VALUE _self){
+  nudb_store_pointer* store_pointer;
+  Data_Get_Struct(_self, nudb_store_pointer, store_pointer);
+
+  return store_pointer->store->is_open() ? Qtrue : Qfalse;
+}
+
 VALUE rudb_store_insert(VALUE _self, VALUE key, VALUE value){
   Check_Type(key,   T_STRING);
   Check_Type(value, T_STRING);
@@ -265,6 +272,7 @@ extern "C"{
       rb_define_alloc_func(cRuDB_store, store_alloc);
       rb_define_method(cRuDB_store, "initialize", (METHOD)rudb_store_init, 0);
       rb_define_method(cRuDB_store, "open",       (METHOD)rudb_store_open, 3);
+      rb_define_method(cRuDB_store, "open?",      (METHOD)rudb_store_is_open, 0);
       rb_define_method(cRuDB_store, "insert",     (METHOD)rudb_store_insert, 2);
       rb_define_method(cRuDB_store, "fetch",      (METHOD)rudb_store_fetch, 1);
       rb_define_method(cRuDB_store, "close",      (METHOD)rudb_store_close, 0);
